@@ -76,7 +76,7 @@ const PaymentDashboard: React.FC = () => {
     try {
       setIsDataLoading(true);
       setError(null);
-      const res = await getAllPayments("2026-03-01", "2026-03-12");
+      const res = await getAllPayments();
       setTableData(res.data);
       //   console.log(res);
     } catch (error) {
