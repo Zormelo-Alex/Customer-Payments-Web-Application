@@ -72,9 +72,9 @@ function PaginationTable<T extends object>({
 
   return (
     <div className="w-full bg-black text-white pb-12">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between gap-3 items-center mb-4">
         <div className="flex items-center gap-2">
-          <div className="flex gap-2 justify-between bg-[#f5f5f520] min-w-[250px] items-center p-3 text-white rounded-[10px] outline-none">
+          <div className="flex gap-2 justify-between bg-[#f5f5f520] min-w-[200px] sm:min-w-[250px] items-center p-3 text-white rounded-[10px] outline-none">
             <input
               type="search"
               placeholder="Search"
@@ -170,7 +170,7 @@ function PaginationTable<T extends object>({
       </div>
 
       <div className="flex flex-col text-sm sm:flex-row justify-between items-center mt-4 gap-4">
-        <div className="text-gray-400 ">
+        <div className="text-gray-400">
           {table.getPrePaginationRowModel().rows.length} Rows
         </div>
         <div className="flex items-center gap-2">
@@ -181,6 +181,8 @@ function PaginationTable<T extends object>({
           </span>
 
           <span className="text-sm text-gray-400">| Go to page:</span>
+        </div>
+        <div className="flex gap-2">
           <input
             type="number"
             min={1}
