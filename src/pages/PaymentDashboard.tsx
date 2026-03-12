@@ -151,6 +151,7 @@ const PaymentDashboard: React.FC = () => {
                 <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-start">
                   <h3 className="text-sm text-gray-400">Highest Payment</h3>
                   <p className="text-2xl font-bold mt-2">
+                    GHS{" "}
                     {tableData.length
                       ? Math.max(
                           ...tableData.map((p: any) => p.Amount),
@@ -167,7 +168,7 @@ const PaymentDashboard: React.FC = () => {
                   <h2 className="text-xl">Transaction Details</h2>
                   <p className="text-[#AEAEAF] text-sm mt-2">
                     View detailed payment records and track each customer
-                    transaction.
+                    transactions.
                   </p>
                 </div>
               </div>
