@@ -1,6 +1,7 @@
 import React from "react";
 import { FaGithub } from "react-icons/fa";
 import { MdOutlinePayments } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const LandingPage: React.FC = () => {
   return (
@@ -31,10 +32,13 @@ const LandingPage: React.FC = () => {
 
           {/* Buttons */}
           <div className="flex items-center justify-center gap-4 mb-10 flex-wrap">
-            <button className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gray-200 text-black font-medium hover:bg-gray-300 transition">
+            <Link
+              to={"/payment"}
+              className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gray-200 text-black font-medium hover:bg-gray-300 transition"
+            >
               View All Payments
               <MdOutlinePayments className="w-4 h-4" />
-            </button>
+            </Link>
           </div>
 
           {/* Social Icons */}
