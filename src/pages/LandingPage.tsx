@@ -27,7 +27,7 @@ const LandingPage: React.FC = () => {
           <p className="text-gray-400 text-lg leading-relaxed mb-10">
             View and manage customer payments effortlessly. Track transaction
             history, access detailed payment records, and stay on top of your
-            shop's finances with ease.
+            finances with ease.
           </p>
 
           {/* Buttons */}
