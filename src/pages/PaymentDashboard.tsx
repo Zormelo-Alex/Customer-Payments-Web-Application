@@ -142,13 +142,13 @@ const PaymentDashboard: React.FC = () => {
                         (sum: number, payment: any) => sum + payment.Amount,
                         0,
                       )
-                      ?.toLocaleString()}
+                      ?.toLocaleString() || 0}
                   </p>
                 </div>
                 <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-start">
                   <h3 className="text-sm text-gray-400">Total Transactions</h3>
                   <p className="text-2xl font-bold mt-2">
-                    {tableData.length?.toLocaleString()}
+                    {tableData.length?.toLocaleString() || 0}
                   </p>
                 </div>
                 <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-start">
@@ -158,7 +158,7 @@ const PaymentDashboard: React.FC = () => {
                     {tableData.length
                       ? Math.max(
                           ...tableData.map((p: any) => p.Amount),
-                        )?.toLocaleString()
+                        )?.toLocaleString() || 0
                       : 0}
                     .00
                   </p>
@@ -242,7 +242,17 @@ const PaymentDashboard: React.FC = () => {
 
               {/* Table */}
               <div className="mt-8 overflow-x-auto">
-                <PaginationTable TableData={tableData} columns={columns} />
+                {tableData?.length > 0 ? (
+                  <PaginationTable TableData={tableData} columns={columns} />
+                ) : (
+                  <div className="flex flex-col items-center justify-center p-6 mt-8">
+                    <span className="text-3xl mb-2">📄</span>
+                    <p className="text-gray-100 font-medium">No data found</p>
+                    <p className="text-gray-500 text-sm">
+                      Try modifying your search criteria or check back later.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           ) : (
