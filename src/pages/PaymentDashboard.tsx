@@ -18,6 +18,9 @@ const PaymentDashboard: React.FC = () => {
   const [paymentDetails, setPaymentDetails] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<any>(null);
+  const [showFilter, setShowFilter] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const columns: ColumnDef<any>[] = [
     columnHelper.accessor("PaymentNumber", {
       cell: (info: any) => (
@@ -72,11 +75,11 @@ const PaymentDashboard: React.FC = () => {
     }),
   ];
 
-  const setUp = async () => {
+  const setUp = async (start?: string, end?: string) => {
     try {
       setIsDataLoading(true);
       setError(null);
-      const res = await getAllPayments();
+      const res = await getAllPayments(start, end);
       setTableData(res.data);
       //   console.log(res);
     } catch (error) {
@@ -170,6 +173,70 @@ const PaymentDashboard: React.FC = () => {
                     View detailed payment records and track each customer
                     transactions.
                   </p>
+                </div>
+
+                <button
+                  onClick={() => setShowFilter(!showFilter)}
+                  className="px-4 py-2 bg-white text-black rounded-lg text-sm font-medium hover:bg-gray-200"
+                >
+                  Filter by Date
+                </button>
+              </div>
+
+              <div
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                  showFilter ? "max-h-40 opacity-100 mt-4" : "max-h-0 opacity-0"
+                }`}
+              >
+                <div className="bg-gray-900 p-4 rounded-lg flex flex-wrap justify-between gap-4">
+                  <div className="flex gap-4">
+                    <div>
+                      <label className="text-sm text-gray-400" htmlFor="start">
+                        Start Date
+                      </label>
+                      <input
+                        id="start"
+                        name="start"
+                        type="date"
+                        className="block bg-[#f5f5f520] p-3 outline-none text-[14px] focus-within:outline-none rounded-[10px] text-white mt-1"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm text-gray-400" htmlFor="end">
+                        End Date
+                      </label>
+                      <input
+                        name="end"
+                        id="end"
+                        type="date"
+                        className="block bg-[#f5f5f520] p-3 outline-none text-[14px] focus-within:outline-none rounded-[10px] text-white mt-1 cursor-pointer"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-end gap-2">
+                    <button
+                      onClick={() => setUp(startDate, endDate)}
+                      className="bg-blue-600 hover:bg-blue-700 px-6 py-1 rounded-[8px]"
+                    >
+                      Apply
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setStartDate("");
+                        setEndDate("");
+                        setUp();
+                      }}
+                      className="bg-gray-700 px-6 py-1 rounded-[8px]"
+                    >
+                      Reset
+                    </button>
+                  </div>
                 </div>
               </div>
 
