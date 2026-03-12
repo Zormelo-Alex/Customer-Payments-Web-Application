@@ -53,7 +53,7 @@ function PaginationTable<T extends object>({
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.json_to_sheet(data);
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet 1");
-    XLSX.writeFile(workbook, `${title}.xlsx`);
+    XLSX.writeFile(workbook, `${title || "document"}.xlsx`);
   };
 
   const toggleFilterInputs = () => {

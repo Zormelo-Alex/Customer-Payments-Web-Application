@@ -2,61 +2,83 @@ import React, { useEffect, useState } from "react";
 import PaginationTable from "../components/TableComponent";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
-import { getAllPayments } from "../api/payments";
+import { getAllPayments, getPaymentDetails } from "../api/payments";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import { FaX } from "react-icons/fa6";
+import moment from "moment";
+import { FaEye } from "react-icons/fa";
+import PaymentModal from "../components/PaymentModal";
 
-// type Payment = {
-//   wallet: string;
-//   img: string;
-//   action: string;
-//   sa_fullName?: string;
-//   amount: string;
-//   rate?: string;
-//   agent: string;
-//   status: string;
-//   time: string;
-// };
 
 const PaymentDashboard: React.FC = () => {
   const columnHelper = createColumnHelper<any>();
   const [tableData, setTableData] = useState<any>([]);
   const [isDataLoading, setIsDataLoading] = useState(true);
+  const [isDetailsLoading, setisDetailsLoading] = useState(true);
+  const [paymentDetails, setPaymentDetails] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<any>(null);
   const columns: ColumnDef<any>[] = [
-    columnHelper.accessor("wallet", {
+    columnHelper.accessor("PaymentNumber", {
       cell: (info: any) => (
         <div className="flex gap-3 items-center">
-          <img
-            src={info.row.original.img}
-            alt=""
-            className="w-[30px] h-[30px] rounded-full bg-white"
-          />
           <p className="text-darklink dark:text-bodytext text-sm">
             {info.getValue()}
           </p>
         </div>
       ),
-      header: () => <span>WALLET</span>,
+      header: () => <span className="whitespace-nowrap">PAYMENT ID</span>,
     }),
-    columnHelper.accessor("action", {
+    columnHelper.accessor("Customer", {
       cell: (info: any) => (
         <p className="text-darklink dark:text-bodytext text-sm">
-          {info.getValue() || info.row.original.sa_fullName}
+          {info.getValue()}
         </p>
+      ),
+      header: () => <span>CUSTOMER</span>,
+    }),
+    columnHelper.accessor("Amount", {
+      cell: (info: any) => (
+        <p className="text-darklink dark:text-bodytext text-sm">
+          GHS {Number(info.getValue()).toLocaleString()}
+        </p>
+      ),
+      header: () => <span>AMOUNT</span>,
+    }),
+    columnHelper.accessor("PaymentDate", {
+      cell: (info: any) => (
+        <p className="text-darklink dark:text-bodytext text-sm">
+          {moment(info.getValue()).format("DD/MM/YYYY - h:mm A")}
+        </p>
+      ),
+      header: () => <span>DATE</span>,
+    }),
+    columnHelper.accessor("Action", {
+      cell: (info: any) => (
+        <div className="">
+          <button
+            className="underline flex gap-2 text-sm items-center justify-center bg-primary hover:bg-primary hover:text-white"
+            onClick={() => {
+              getPaymentDetailsFunc(info.row.original.PaymentId);
+              setIsModalOpen(true);
+            }}
+          >
+            <FaEye size="18" />
+            view
+          </button>
+        </div>
       ),
       header: () => <span>ACTION</span>,
     }),
-   
-    
   ];
+
   const setUp = async () => {
     try {
       setIsDataLoading(true);
       setError(null);
       const res = await getAllPayments("2026-03-01", "2026-03-12");
-      setTableData(res.data)
-      console.log(res);
+      setTableData(res.data);
+    //   console.log(res);
     } catch (error) {
       console.log(error);
       setError(error);
@@ -64,6 +86,19 @@ const PaymentDashboard: React.FC = () => {
       setIsDataLoading(false);
     }
   };
+
+  const getPaymentDetailsFunc = async (id: string) => {
+    try {
+      setisDetailsLoading(true);
+      const res: any = await getPaymentDetails(id);
+      setPaymentDetails(res.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setisDetailsLoading(false);
+    }
+  };
+
   useEffect(() => {
     setUp();
   }, []);
@@ -88,16 +123,33 @@ const PaymentDashboard: React.FC = () => {
               {/* Data Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
                 <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-start">
-                  <h3 className="text-sm text-gray-400">Total Transactions</h3>
-                  <p className="text-2xl font-bold mt-2">1,245</p>
-                </div>
-                <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-start">
                   <h3 className="text-sm text-gray-400">Total Revenue</h3>
-                  <p className="text-2xl font-bold mt-2">$56,780</p>
+                  <p className="text-2xl font-bold mt-2">
+                    GHS{" "}
+                    {tableData
+                      ?.reduce(
+                        (sum: number, payment: any) => sum + payment.Amount,
+                        0,
+                      )
+                      ?.toLocaleString()}
+                  </p>
                 </div>
                 <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-start">
-                  <h3 className="text-sm text-gray-400">Pending Payments</h3>
-                  <p className="text-2xl font-bold mt-2">32</p>
+                  <h3 className="text-sm text-gray-400">Total Transactions</h3>
+                  <p className="text-2xl font-bold mt-2">
+                    {tableData.length?.toLocaleString()}
+                  </p>
+                </div>
+                <div className="bg-gray-900 rounded-xl p-6 flex flex-col items-start">
+                  <h3 className="text-sm text-gray-400">Highest Payment</h3>
+                  <p className="text-2xl font-bold mt-2">
+                    {tableData.length
+                      ? Math.max(
+                          ...tableData.map((p: any) => p.Amount),
+                        )?.toLocaleString()
+                      : 0}
+                    .00
+                  </p>
                 </div>
               </div>
 
@@ -121,7 +173,7 @@ const PaymentDashboard: React.FC = () => {
             <div className="w-full flex flex-col items-center justify-center">
               <div className="w-full bg-red-600 text-white px-4 py-3 rounded-md mb-4 flex items-center gap-2">
                 <FaX />
-                <span className="text-sm">{error.message}</span>
+                <span className="text-sm">{error?.message}</span>
               </div>
               <img
                 src="https://cdni.iconscout.com/illustration/premium/thumb/error-illustration-svg-download-png-6983265.png"
@@ -131,6 +183,13 @@ const PaymentDashboard: React.FC = () => {
           )}
         </div>
       )}
+
+      <PaymentModal
+        isLoading={isDetailsLoading}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        payment={paymentDetails}
+      />
     </>
   );
 };

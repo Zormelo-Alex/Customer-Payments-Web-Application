@@ -8,3 +8,9 @@ export const getAllPayments = async (startDate: string, endDate: string) => {
     },
   });
 };
+
+export const getPaymentDetails = async (paymentID: string) => {
+  return await axios.get(
+    `https://spes.pscgh.com:442/sales-api/api/Payments/${paymentID}`,
+  );
+};
