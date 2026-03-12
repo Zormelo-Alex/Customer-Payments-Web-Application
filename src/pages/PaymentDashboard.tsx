@@ -2,19 +2,30 @@ import React, { useEffect, useState } from "react";
 import PaginationTable from "../components/TableComponent";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
-import axios from "axios";
 import { getAllPayments } from "../api/payments";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 import { FaX } from "react-icons/fa6";
 
+// type Payment = {
+//   wallet: string;
+//   img: string;
+//   action: string;
+//   sa_fullName?: string;
+//   amount: string;
+//   rate?: string;
+//   agent: string;
+//   status: string;
+//   time: string;
+// };
+
 const PaymentDashboard: React.FC = () => {
-  const columnHelper = createColumnHelper();
+  const columnHelper = createColumnHelper<any>();
   const [tableData, setTableData] = useState<any>([]);
   const [isDataLoading, setIsDataLoading] = useState(true);
   const [error, setError] = useState<any>(null);
   const columns: ColumnDef<any>[] = [
     columnHelper.accessor("wallet", {
-      cell: (info) => (
+      cell: (info: any) => (
         <div className="flex gap-3 items-center">
           <img
             src={info.row.original.img}
@@ -29,70 +40,22 @@ const PaymentDashboard: React.FC = () => {
       header: () => <span>WALLET</span>,
     }),
     columnHelper.accessor("action", {
-      cell: (info) => (
+      cell: (info: any) => (
         <p className="text-darklink dark:text-bodytext text-sm">
           {info.getValue() || info.row.original.sa_fullName}
         </p>
       ),
       header: () => <span>ACTION</span>,
     }),
-    columnHelper.accessor("amount", {
-      cell: (info) => (
-        <p
-          className={`$ {
-            info.row.original.rate == "bad"
-              ? "text-[#0B78CC]"
-              : "text-[#34C759]"
-          } text-sm`}
-        >
-          {info.getValue()}
-        </p>
-      ),
-      header: () => <span>AMOUNT</span>,
-    }),
-    columnHelper.accessor("agent", {
-      cell: (info) => (
-        <p className="text-darklink dark:text-bodytext text-sm flex items-center gap-1">
-          {info.getValue()}
-          <Badge
-            className="p-[10px] px-[12px] bg-[#2A2F3A] rounded-[10px] flex items-center justify-center"
-            notPadd={true}
-          >
-            <IoMdArrowRoundForward
-              size={16}
-              className="text-(--primaryColor)"
-            />
-          </Badge>
-        </p>
-      ),
-      header: () => <span>AGENT</span>,
-    }),
-    columnHelper.accessor("status", {
-      cell: (info) => (
-        <p className="text-darklink dark:text-bodytext text-sm flex items-center gap-2">
-          <div className="relative w-[7px] h-[7px] flex justify-center items-center">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
-            <span className="relative inline-flex rounded-full h-full w-full bg-green-600"></span>
-          </div>
-          {info.getValue()}
-        </p>
-      ),
-      header: () => <span>STATUS</span>,
-    }),
-    columnHelper.accessor("time", {
-      cell: (info) => (
-        <p className="text-darklink dark:text-bodytext text-sm">
-          {info.getValue()}
-        </p>
-      ),
-      header: () => <span>TIME</span>,
-    }),
+   
+    
   ];
   const setUp = async () => {
     try {
       setIsDataLoading(true);
       setError(null);
       const res = await getAllPayments("2026-03-01", "2026-03-12");
+      setTableData(res.data)
       console.log(res);
     } catch (error) {
       console.log(error);
