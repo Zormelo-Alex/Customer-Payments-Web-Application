@@ -4,11 +4,11 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { getAllPayments, getPaymentDetails } from "../api/payments";
 import LoadingSkeleton from "../components/LoadingSkeleton";
-import { FaX } from "react-icons/fa6";
+import { FaChevronLeft, FaX } from "react-icons/fa6";
 import moment from "moment";
 import { FaEye } from "react-icons/fa";
 import PaymentModal from "../components/PaymentModal";
-
+import { Link } from "react-router-dom";
 
 const PaymentDashboard: React.FC = () => {
   const columnHelper = createColumnHelper<any>();
@@ -78,7 +78,7 @@ const PaymentDashboard: React.FC = () => {
       setError(null);
       const res = await getAllPayments("2026-03-01", "2026-03-12");
       setTableData(res.data);
-    //   console.log(res);
+      //   console.log(res);
     } catch (error) {
       console.log(error);
       setError(error);
@@ -107,7 +107,15 @@ const PaymentDashboard: React.FC = () => {
       {isDataLoading ? (
         <LoadingSkeleton />
       ) : (
-        <div className="min-h-screen bg-black text-white px-8 py-12 flex flex-col items-center justify-start">
+        <div className="min-h-screen bg-black text-white px-8 py-8 flex flex-col items-center justify-start">
+          <div className="flex justify-start w-full mb-8">
+            <Link
+              to={"/"}
+              className="flex items-center justify-center px-6 py-1 rounded-lg bg-gray-200 text-black font-medium hover:bg-gray-300 transitio"
+            >
+              <FaChevronLeft /> Back
+            </Link>
+          </div>
           {!error ? (
             <div className="w-full mx-auto">
               {/* Payment Section */}

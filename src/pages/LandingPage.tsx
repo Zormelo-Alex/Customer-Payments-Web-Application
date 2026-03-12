@@ -44,7 +44,8 @@ const LandingPage: React.FC = () => {
           {/* Social Icons */}
           <div className="flex justify-center gap-6">
             <a
-              href="#"
+              href="https://github.com/Zormelo-Alex/Customer-Payments-Web-Application"
+              target="_blank"
               className="p-3 rounded-full bg-gray-900 hover:bg-gray-800 transition"
               title="View github repository"
             >
