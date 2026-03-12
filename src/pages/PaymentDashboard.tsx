@@ -167,7 +167,7 @@ const PaymentDashboard: React.FC = () => {
                   <h2 className="text-xl">Transaction Details</h2>
                   <p className="text-[#AEAEAF] text-sm mt-2">
                     View detailed payment records and track each customer
-                    transaction for your shop.
+                    transaction.
                   </p>
                 </div>
               </div>
