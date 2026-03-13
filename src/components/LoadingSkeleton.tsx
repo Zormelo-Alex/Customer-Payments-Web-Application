@@ -2,7 +2,7 @@ import React from "react";
 
 const LoadingSkeleton:React.FC = () => {
   return (
-    <div className="min-h-screen bg-black text-white px-8 py-12 flex flex-col items-center justify-start">
+    <div className="min-h-screen w-full bg-black text-white flex flex-col items-center justify-start">
       <div className="w-full mx-auto">
         {/* Top Skeleton Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
